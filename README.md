@@ -1,50 +1,29 @@
-# 🚗 Gestionnaire de Parc Auto - Google Sheets & AppSheet
+# 🔧 Guide d'Activation - Gestion de Parc Solo
 
-Ce projet permet de transformer un simple tableur Google Sheets en une application robuste de gestion de flotte automobile. Il automatise le suivi de la maintenance, les alertes d'assurance et le contrôle quotidien des véhicules.
+Une fois le code copié dans Google Apps Script, suivez ces étapes pour que l'application soit 100% autonome.
 
-## 🌟 Fonctionnalités
-- **Inventaire Centralisé :** Suivi de l'état des véhicules, des modèles et des immatriculations.
-- **Alertes Automatiques :** Notification par e-mail pour les vidanges proches et les assurances expirant sous 7 jours.
-- **Suivi des Kilométrages :** Calcul automatique des distances parcourues.
-- **Prêt pour le Mobile :** Compatible avec AppSheet pour une saisie sur le terrain (photos, signatures, scan QR Code).
+## 1. Activation des Automatismes (Déclencheurs)
+Dans l'éditeur Apps Script, cliquez sur l'icône **Réveil** (Déclencheurs) à gauche :
 
-## 🛠️ Installation
+### A. Mise à jour automatique (Formulaire)
+- **Fonction :** `mettreAJourKmAuto`
+- **Source :** "De la feuille de calcul"
+- **Événement :** "Lors de l'envoi du formulaire"
+*Ceci permet de mettre à jour votre inventaire dès que vous validez une saisie sur mobile.*
 
-### 1. Préparation du Google Sheets
-Créez un Google Sheets avec un onglet nommé **`Parc_Auto`**. Les colonnes doivent être organisées comme suit :
+### B. Rapport Quotidien (Email)
+- **Fonction :** `verifierAlertesQuotidiennes`
+- **Source :** "Selon le temps"
+- **Type :** "Minuteur quotidien" (choisir 08h - 09h)
+*Ceci vous envoie un mail chaque matin si une assurance expire ou si une vidange est due.*
 
-| Colonne | Titre | Description |
-| :--- | :--- | :--- |
-| **A** | ID | Identifiant unique du véhicule |
-| **B** | Immatriculation | Plaque d'immatriculation |
-| **C** | Marque | Constructeur |
-| **D** | Modèle | Modèle du véhicule |
-| **G** | Km Vidange | Le kilométrage cible pour la prochaine révision |
-| **H** | Échéance Assurance | Date d'expiration (format JJ/MM/AAAA) |
-| **I** | Km Actuel | Dernier kilométrage relevé |
+## 2. Structure de la Feuille Google Sheets
+Le script lit les données selon cet ordre précis :
+- **Colonne B (index 1) :** Immatriculation (ex: AA-123-BB)
+- **Colonne G (index 6) :** Kilométrage cible Vidange
+- **Colonne H (index 7) :** Date Échéance Assurance
+- **Colonne I (index 8) :** Kilométrage Actuel (mis à jour par le script)
 
-### 2. Configuration du Script (Google Apps Script)
-1. Dans votre Google Sheets, allez dans **Extensions** > **Apps Script**.
-2. Copiez le contenu du fichier `Code.gs.js` présent dans ce dépôt GitHub.
-3. Modifiez la variable `EMAIL_GESTIONNAIRE` au début du script avec votre adresse e-mail.
-4. Cliquez sur **Enregistrer** (icône disquette).
-
-### 3. Automatisation (Trigger)
-Pour que les alertes soient envoyées automatiquement chaque matin :
-1. Dans l'éditeur Apps Script, cliquez sur l'icône **Réveil** (Déclencheurs).
-2. Cliquez sur **+ Ajouter un déclencheur**.
-3. Choisissez la fonction `executerControleFlotte`.
-4. Sélectionnez "Selon le temps" > "Minuteur quotidien".
-
-## 📱 Utilisation avec AppSheet (Optionnel)
-Pour transformer cet outil en application mobile :
-1. Allez sur [AppSheet.com](https://www.appsheet.com).
-2. Créez une nouvelle application à partir de votre feuille de calcul.
-3. Ajoutez les vues de formulaires pour permettre aux agents de saisir les données de prise de service.
-
-## 🛡️ Sécurité
-- Ne partagez pas le lien de votre Google Sheets publiquement.
-- Si vous utilisez ce script sur GitHub, assurez-vous de ne pas inclure de données sensibles (noms d'agents, e-mails personnels) dans le code source.
-
----
-*Projet développé pour l'automatisation de la gestion de flotte automobile - 2026.*
+## 3. Liaison avec Google Forms
+1. Créez un formulaire avec : `Immatriculation` (Liste) et `Kilométrage` (Nombre).
+2. Liez le formulaire à votre Google Sheets (onglet "Réponses au formulaire 1").
